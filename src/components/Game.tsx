@@ -2,6 +2,7 @@ import React, {useCallback, useState} from "react";
 import {calculateWinner} from "../helpers/calculateWinner";
 import {Board} from "./Board";
 import {Moves} from "./Moves";
+import {Status} from "./Status";
 
 interface GameProps {
   oIsFirst?: boolean;
@@ -32,11 +33,6 @@ export const Game = ({oIsFirst}: GameProps) => {
   );
 
   const current = history[stepNumber];
-  const winner = calculateWinner(current.squares);
-
-  const status = winner
-    ? `Winner: ${winner}`
-    : `Next player: ${getNextSquareValue()}`;
 
   return (
     <div className="game">
@@ -44,7 +40,7 @@ export const Game = ({oIsFirst}: GameProps) => {
         <Board squares={current.squares} onClick={(i) => handleClick(i)} />
       </div>
       <div className="game-info">
-        <div>{status}</div>
+        <Status squares={current.squares} next={getNextSquareValue()} />
         <Moves history={history} jumpTo={(move) => setStepNumber(move)} />
       </div>
     </div>
