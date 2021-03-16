@@ -1,15 +1,16 @@
+import {useContext} from "react";
 import {calculateWinner} from "../helpers/calculateWinner";
-import {SquareValue} from "./Square";
+import {GameContext} from "./Game/GameProvider";
 
-interface StatusProps {
-  squares: SquareValue[];
-  next: SquareValue;
-}
+export const Status = () => {
+  const {history, stepNumber, nextSquareValue} = useContext(GameContext);
 
-export const Status = ({squares, next}: StatusProps) => {
-  const winner = calculateWinner(squares);
+  const current = history[stepNumber];
+  const winner = calculateWinner(current.squares);
 
-  const status = winner ? `Winner: ${winner}` : `Next player: ${next}`;
+  const status = winner
+    ? `Winner: ${winner}`
+    : `Next player: ${nextSquareValue}`;
 
   return <div>{status}</div>;
 };

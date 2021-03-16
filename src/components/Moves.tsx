@@ -1,13 +1,8 @@
-import {SquareValue} from "./Square";
+import {useContext} from "react";
+import {GameContext} from "./Game/GameProvider";
 
-interface MovesProps {
-  history: {
-    squares: SquareValue[];
-  }[];
-  jumpTo: (move: number) => void;
-}
-
-export const Moves = ({history, jumpTo}: MovesProps) => {
+export const Moves = () => {
+  const {history, jumpTo} = useContext(GameContext);
   const moves = history.map((_step, move) => {
     const desc = move ? `Go to move #${move}` : "Go to game start";
 

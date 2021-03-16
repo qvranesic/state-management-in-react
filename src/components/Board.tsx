@@ -1,14 +1,13 @@
-import React from "react";
-import {Square, SquareValue} from "./Square";
+import React, {useContext} from "react";
+import {GameContext} from "./Game/GameProvider";
+import {Square} from "./Square";
 
-interface BoardProps {
-  squares: SquareValue[];
-  onClick: (i: number) => void;
-}
+export const Board = () => {
+  const {history, stepNumber, squareClick} = useContext(GameContext);
 
-export const Board = ({squares, onClick}: BoardProps) => {
   const renderSquare = (i: number) => {
-    return <Square value={squares[i]} onClick={() => onClick(i)} />;
+    const current = history[stepNumber];
+    return <Square value={current.squares[i]} onClick={() => squareClick(i)} />;
   };
 
   return (
