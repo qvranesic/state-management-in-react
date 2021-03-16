@@ -1,6 +1,7 @@
 import React, {useCallback, useState} from "react";
 import {calculateWinner} from "../helpers/calculateWinner";
 import {Board} from "./Board";
+import {Moves} from "./Moves";
 
 interface GameProps {
   oIsFirst?: boolean;
@@ -30,22 +31,8 @@ export const Game = ({oIsFirst}: GameProps) => {
     [getNextSquareValue, history, stepNumber]
   );
 
-  const jumpTo = (move: number) => {
-    setStepNumber(move);
-  };
-
   const current = history[stepNumber];
   const winner = calculateWinner(current.squares);
-
-  const moves = history.map((_step, move) => {
-    const desc = move ? `Go to move #${move}` : "Go to game start";
-
-    return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{desc}</button>
-      </li>
-    );
-  });
 
   const status = winner
     ? `Winner: ${winner}`
@@ -58,7 +45,7 @@ export const Game = ({oIsFirst}: GameProps) => {
       </div>
       <div className="game-info">
         <div>{status}</div>
-        <ol>{moves}</ol>
+        <Moves history={history} jumpTo={(move) => setStepNumber(move)} />
       </div>
     </div>
   );
