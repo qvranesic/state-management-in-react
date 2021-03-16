@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {GameContext} from "./Game/GameProvider";
+import {GameContext} from "./GameProvider";
 
 export const Moves = () => {
   const {history, jumpTo} = useContext(GameContext);

@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
-import {GameContext} from "./Game/GameProvider";
-import {Square} from "./Square";
+import {Square} from "../Square";
+import {GameContext} from "./GameProvider";
 
 export const Board = () => {
   const {history, stepNumber, squareClick} = useContext(GameContext);

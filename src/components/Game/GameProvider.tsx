@@ -9,7 +9,7 @@ import {calculateNext} from "../../helpers/calculateNext";
 import {calculateWinner} from "../../helpers/calculateWinner";
 import {SquareValue} from "../Square";
 
-interface GameProviderProps {
+export interface GameProviderProps {
   oIsFirst?: boolean;
   freeze?: boolean;
   onFinish?: (winner: SquareValue) => void;

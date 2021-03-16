@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import "./App.css";
 import {Game} from "./components/Game";
-import {GameProvider} from "./components/Game/GameProvider";
 import {SquareValue} from "./components/Square";
 import {calculateNext} from "./helpers/calculateNext";
 
@@ -15,14 +14,12 @@ const App = () => {
   return (
     <>
       {games.map((winner, index) => (
-        <GameProvider
+        <Game
           key={index}
           oIsFirst={calculateNext(index) === "O"}
           onFinish={onGameFinish}
           freeze={winner !== null}
-        >
-          <Game />
-        </GameProvider>
+        />
       ))}
     </>
   );
