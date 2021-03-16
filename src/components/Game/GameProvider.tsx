@@ -11,6 +11,8 @@ import {SquareValue} from "../Square";
 
 interface GameProviderProps {
   oIsFirst?: boolean;
+  freeze?: boolean;
+  onFinish?: (winner: SquareValue) => void;
 }
 
 interface IGameContext {
@@ -26,6 +28,8 @@ export const GameContext = createContext<IGameContext>({} as any);
 export const GameProvider = ({
   children,
   oIsFirst,
+  freeze,
+  onFinish,
 }: PropsWithChildren<GameProviderProps>) => {
   const [history, setHistory] = useState([{squares: Array(9).fill(null)}]);
   const [stepNumber, setStepNumber] = useState(0);
@@ -39,7 +43,11 @@ export const GameProvider = ({
     setStepNumber(history.length - 1);
   }, [history]);
 
-  const jumpTo = (move: number) => setStepNumber(move);
+  const jumpTo = (move: number) => {
+    if (!freeze) {
+      setStepNumber(move);
+    }
+  };
 
   const squareClick = (index: number) => {
     const tempHistory = history.slice(0, stepNumber + 1);
@@ -51,6 +59,13 @@ export const GameProvider = ({
     squares[index] = getNextSquareValue();
     setHistory([...tempHistory, {squares}]);
   };
+
+  useEffect(() => {
+    const current = history[stepNumber];
+    const winner = calculateWinner(current.squares);
+    winner && onFinish && onFinish(winner);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history, stepNumber]);
 
   return (
     <GameContext.Provider
