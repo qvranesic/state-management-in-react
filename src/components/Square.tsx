@@ -1,9 +1,10 @@
 import React from "react";
 
-export type SquareValue = "X" | "O" | null;
+export type SquareValue = "X" | "O";
+export type NullableSquareValue = SquareValue | null;
 
 interface SquareProps {
-  value: SquareValue;
+  value: NullableSquareValue;
   onClick: () => void;
 }
 

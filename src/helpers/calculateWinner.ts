@@ -1,6 +1,8 @@
-import {SquareValue} from "../components/Square";
+import {NullableSquareValue} from "../components/Square";
 
-export function calculateWinner(squares: SquareValue[]): SquareValue {
+export function calculateWinner(
+  squares: NullableSquareValue[]
+): NullableSquareValue {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],

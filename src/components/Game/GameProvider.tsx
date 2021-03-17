@@ -5,18 +5,18 @@ import {
   useEffect,
   useState,
 } from "react";
-import {calculateNext} from "../../helpers/calculateNext";
+import {calculateAlternateNextSquareValue} from "../../helpers/calculateAlternateNextSquareValue";
 import {calculateWinner} from "../../helpers/calculateWinner";
-import {SquareValue} from "../Square";
+import {NullableSquareValue, SquareValue} from "../Square";
 
-export interface GameProviderProps {
-  oIsFirst?: boolean;
-  freeze?: boolean;
-  onFinish?: (winner: SquareValue) => void;
+export interface HistoryStep {
+  squares: NullableSquareValue[];
 }
 
+export const defaultHistory: HistoryStep[] = [{squares: Array(9).fill(null)}];
+
 interface IGameContext {
-  history: {squares: SquareValue[]}[];
+  history: HistoryStep[];
   stepNumber: number;
   nextSquareValue: SquareValue;
   jumpTo: (move: number) => void;
@@ -25,18 +25,26 @@ interface IGameContext {
 
 export const GameContext = createContext<IGameContext>({} as any);
 
+export interface GameProviderProps {
+  oIsFirst?: boolean;
+  initialHistory?: HistoryStep[];
+  freeze?: boolean;
+  onUpdate?: (history: HistoryStep[], stepNumber: number) => void;
+}
+
 export const GameProvider = ({
   children,
   oIsFirst,
+  initialHistory,
   freeze,
-  onFinish,
+  onUpdate,
 }: PropsWithChildren<GameProviderProps>) => {
-  const [history, setHistory] = useState([{squares: Array(9).fill(null)}]);
+  const [history, setHistory] = useState(initialHistory ?? defaultHistory);
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsFirst] = useState(!oIsFirst);
 
   const getNextSquareValue = useCallback(() => {
-    return calculateNext(stepNumber, xIsFirst);
+    return calculateAlternateNextSquareValue(xIsFirst ? "X" : "O", stepNumber);
   }, [stepNumber, xIsFirst]);
 
   useEffect(() => {
@@ -44,16 +52,14 @@ export const GameProvider = ({
   }, [history]);
 
   const jumpTo = (move: number) => {
-    if (!freeze) {
-      setStepNumber(move);
-    }
+    setStepNumber(move);
   };
 
   const squareClick = (index: number) => {
     const tempHistory = history.slice(0, stepNumber + 1);
     const current = tempHistory[tempHistory.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[index]) {
+    if (freeze || calculateWinner(squares) || squares[index]) {
       return;
     }
     squares[index] = getNextSquareValue();
@@ -61,11 +67,9 @@ export const GameProvider = ({
   };
 
   useEffect(() => {
-    const current = history[stepNumber];
-    const winner = calculateWinner(current.squares);
-    winner && onFinish && onFinish(winner);
+    onUpdate && onUpdate(history, stepNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history, stepNumber]);
+  }, [stepNumber]);
 
   return (
     <GameContext.Provider
