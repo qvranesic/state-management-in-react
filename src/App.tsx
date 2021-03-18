@@ -91,7 +91,7 @@ const App = ({firstSquareValue}: AppProps) => {
       <StrategySelect
         {...activeStrategy}
         onSelect={(strategy) =>
-          setActiveStrategy({strategy, sinceGameIndex: playedGames.length - 1})
+          setActiveStrategy({strategy, sinceGameIndex: playedGames.length})
         }
       />
 
